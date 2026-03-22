@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Okhra V2 - AI Text Detector</title>
+    <title>Okhra V2</title>
     <!-- Load ONNX Runtime Web -->
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
     <style>
@@ -120,8 +120,8 @@
 </head>
 <body>
 
-    <h1>Okhra Text Detection</h1>
-    <p class="subtitle">Local in-browser AI classification</p>
+    <h1>Okhra V2</h1>
+    <p class="subtitle">Text is processed locally, no data leaves your machine</p>
 
     <div class="container">
         <div class="panel">
@@ -140,21 +140,16 @@
         let selectWordsSet = null;
         let punctRegex = null;
 
-        const punctStr = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~–—…«»‹›„‚‐‑‒―‟‛"; // Match python's set
-
+        const punctStr = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~–—…«»‹›„‚‐‑‒―‟‛";
         async function init() {
             try {
-                // 1. Load config
                 const configRes = await fetch('model_config.json');
                 config = await configRes.json();
                 selectWordsSet = new Set(config.select_words);
 
-                // Setup punctuation regex to add spaces around punctuation (matches Python's translate behavior)
                 const escapedPunct = punctStr.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
                 punctRegex = new RegExp(`([${escapedPunct}])`, 'g');
 
-                // 2. Load ONNX Model
-                // ort is loaded globally via CDN
                 session = await ort.InferenceSession.create('okhra_v2.onnx', { executionProviders: ['wasm'] });
 
                 document.getElementById('checkBtn').innerText = "Check Text";
@@ -179,18 +174,15 @@
             document.getElementById('checkBtn').disabled = true;
 
             try {
-                // TOKENIZATION & CHUNKING
                 let tokens = [];
                 let wordRegex = /\S+/g;
                 let match;
 
-                // Match original python logic: keep track of raw character indices
                 while ((match = wordRegex.exec(text)) !== null) {
                     let word = match[0];
                     let startIdx = match.index;
                     let endIdx = wordRegex.lastIndex;
 
-                    // Pad punctuation with spaces and split
                     let paddedWord = word.toLowerCase().replace(punctRegex, ' $1 ');
                     let subTokens = paddedWord.trim().split(/\s+/);
 
@@ -221,10 +213,9 @@
                     }
                 }
 
-                // INFERENCE
                 const inputTensor = new ort.Tensor('int64', flatArray, [numChunks, maxLen]);
                 const results = await session.run({ input: inputTensor });
-                const logits = results.output.data; // Float32Array [numChunks * 1]
+                const logits = results.output.data;
                 
                 let probs = [];
                 let totalProb = 0;
@@ -235,15 +226,14 @@
                 }
                 let avgProb = totalProb / numChunks;
 
-                // RENDERING
                 let threshold = config.threshold;
                 
                 let verdictEl = document.getElementById('verdictBox');
                 if (avgProb > threshold) {
-                    verdictEl.innerText = `Verdict: AI Generated (${(avgProb * 100).toFixed(1)}% prob)`;
+                    verdictEl.innerText = `AI Generated`;
                     verdictEl.style.color = "#a83232";
                 } else {
-                    verdictEl.innerText = `Verdict: Human Written (${(avgProb * 100).toFixed(1)}% prob)`;
+                    verdictEl.innerText = `Human Written`;
                     verdictEl.style.color = "#4c8b3f";
                 }
 
@@ -265,9 +255,7 @@
                     let prob = probs[c];
 
                     if (prob > threshold) {
-                        // Calculate intensity (0.0 to 1.0 based on distance from threshold)
                         let intensity = Math.min(1.0, (prob - threshold) / (1.0 - threshold));
-                        // Opacity from 0.15 (barely AI) to 0.75 (definitely AI)
                         let alpha = intensity * 0.6 + 0.15;
                         renderedHtml += `<span class="chunk" style="background-color: rgba(220, 50, 50, ${alpha});">${chunkText}</span>`;
                     } else {
@@ -292,7 +280,7 @@
         }
 
         function resetUI() {
-            document.getElementById('checkBtn').innerText = "Check Text";
+            document.getElementById('checkBtn').innerText = "Check";
             document.getElementById('checkBtn').disabled = false;
             document.getElementById('verdictBox').innerText = "Waiting for input...";
             document.getElementById('verdictBox').style.color = "inherit";
