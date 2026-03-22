@@ -16,6 +16,9 @@
         --text-color: #4a3b32;
         --accent-color: #a0785a;
         --btn-hover: #8b6548;
+        --ai-color: #a83232;
+        --human-color: #4c8b3f;
+        --mixed-color: #d97706;
     }
     body {
         font-family: "Lato", sans-serif;
@@ -276,22 +279,29 @@
             
             let probs = [];
             let totalProb = 0;
+            let hasHighProbChunk = false;
+
             for (let i = 0; i < numChunks; i++) {
                 let p = sigmoid(logits[i]);
                 probs.push(p);
                 totalProb += p;
+                if (p > 0.7) hasHighProbChunk = true; 
             }
             let avgProb = totalProb / numChunks;
 
             let threshold = config.threshold;
             
             let verdictEl = document.getElementById('verdictBox');
+            
             if (avgProb > threshold) {
                 verdictEl.innerText = `AI Generated`;
-                verdictEl.style.color = "#a83232";
+                verdictEl.style.color = "var(--ai-color)";
+            } else if (hasHighProbChunk) {
+                verdictEl.innerText = `Mixed`;
+                verdictEl.style.color = "var(--mixed-color)";
             } else {
                 verdictEl.innerText = `Human Written`;
-                verdictEl.style.color = "#4c8b3f";
+                verdictEl.style.color = "var(--human-color)";
             }
 
             let renderedHtml = "";
