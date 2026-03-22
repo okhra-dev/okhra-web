@@ -4,292 +4,302 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Okhra V2</title>
-    <!-- Load ONNX Runtime Web -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
-    <style>
-        :root {
-            --bg-color: #fdfaf6;
-            --panel-bg: #f5ebe1;
-            --border-color: #d8c3b1;
-            --text-color: #4a3b32;
-            --accent-color: #a0785a;
-            --btn-hover: #8b6548;
-        }
-        body {
-            font-family: 'Georgia', serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: var(--accent-color);
-            margin-bottom: 5px;
-        }
-        p.subtitle {
-            margin-top: 0;
-            font-size: 0.9em;
-            color: #7a6859;
-            margin-bottom: 25px;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 1200px;
-            gap: 20px;
-        }
-        .panel {
-            flex: 1;
-            min-width: 300px;
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        textarea {
-            width: 100%;
-            flex-grow: 1;
-            min-height: 400px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            font-family: inherit;
-            font-size: 16px;
-            padding: 15px;
-            border-radius: 4px;
-            resize: vertical;
-            box-sizing: border-box;
-        }
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-        button {
-            background-color: var(--accent-color);
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            font-family: inherit;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 15px;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background-color: var(--btn-hover);
-        }
-        button:disabled {
-            background-color: var(--border-color);
-            cursor: not-allowed;
-        }
-        #verdictBox {
-            text-align: center;
-            padding: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 4px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            margin-bottom: 15px;
-        }
-        #coloredText {
-            flex-grow: 1;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 16px;
-            white-space: pre-wrap;
-            overflow-y: auto;
-            min-height: 330px;
-            line-height: 1.6;
-        }
-        .chunk {
-            border-radius: 3px;
-        }
-    </style>
+<style>
+    :root {
+        --bg-color: #fdfaf6;
+        --panel-bg: #f5ebe1;
+        --border-color: #d8c3b1;
+        --text-color: #4a3b32;
+        --accent-color: #a0785a;
+        --btn-hover: #8b6548;
+    }
+    body {
+        font-family: "Lato", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: 1200px;
+    }
+    h1 {
+        color: var(--accent-color);
+        margin-bottom: 5px;
+        font-size: 2.5em;
+        font-weight: 900;
+    }
+    p.subtitle {
+        margin-top: 0;
+        font-size: 1.1em;
+        font-weight: 700;
+        color: #7a6859;
+        margin-bottom: 25px;
+        text-align: left;
+    }
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 20px;
+    }
+    .panel {
+        flex: 1;
+        min-width: 300px;
+        background-color: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+    textarea {
+        width: 100%;
+        flex-grow: 1;
+        min-height: 400px;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        font-family: inherit;
+        font-size: 14px;
+        padding: 15px;
+        border-radius: 4px;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    textarea:focus {
+        outline: none;
+        border-color: var(--accent-color);
+    }
+    button {
+        background-color: var(--accent-color);
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-top: 15px;
+        transition: background 0.2s;
+    }
+    button:hover {
+        background-color: var(--btn-hover);
+    }
+    button:disabled {
+        background-color: var(--border-color);
+        cursor: not-allowed;
+    }
+    #verdictBox {
+        text-align: center;
+        padding: 15px;
+        font-size: 1.4em;
+        font-weight: 900;
+        border-radius: 4px;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        margin-bottom: 15px;
+    }
+    #coloredText {
+        flex-grow: 1;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 15px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 400;
+        white-space: pre-wrap;
+        overflow-y: auto;
+        min-height: 330px;
+        line-height: 1.6;
+    }
+    .chunk {
+        border-radius: 3px;
+    }
+</style>
 </head>
 <body>
 
-    <h1>Okhra V2</h1>
-    <p class="subtitle">Text is processed locally, no data leaves your machine</p>
+<h1>Okhra V2</h1>
+<p class="subtitle">Fast and accurate AI detector. Text is processed locally in your browser.</p>
 
-    <div class="container">
-        <div class="panel">
-            <textarea id="inputText" placeholder="Paste text here to analyze..."></textarea>
-            <button id="checkBtn" disabled>Loading Model...</button>
-        </div>
-        <div class="panel right-panel">
-            <div id="verdictBox">Waiting for input...</div>
-            <div id="coloredText">Output will appear here. AI-generated segments will be highlighted in red.</div>
-        </div>
+<div class="container">
+    <div class="panel">
+        <textarea id="inputText" placeholder="Paste text here to analyze..."></textarea>
+        <button id="checkBtn" disabled>Loading Model...</button>
     </div>
+    <div class="panel right-panel">
+        <div id="verdictBox">Waiting for input...</div>
+        <div id="coloredText">Output will appear here. AI-generated segments will be highlighted in red.</div>
+    </div>
+</div>
 
-    <script>
-        let session = null;
-        let config = null;
-        let selectWordsSet = null;
-        let punctRegex = null;
+<script>
+    let session = null;
+    let config = null;
+    let selectWordsSet = null;
+    let punctRegex = null;
 
-        const punctStr = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~–—…«»‹›„‚‐‑‒―‟‛";
-        async function init() {
-            try {
-                const configRes = await fetch('model_config.json');
-                config = await configRes.json();
-                selectWordsSet = new Set(config.select_words);
+    const punctStr = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~–—…«»‹›„‚‐‑‒―‟‛";
+    async function init() {
+        try {
+            const configRes = await fetch('model_config.json');
+            config = await configRes.json();
+            selectWordsSet = new Set(config.select_words);
 
-                const escapedPunct = punctStr.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-                punctRegex = new RegExp(`([${escapedPunct}])`, 'g');
+            const escapedPunct = punctStr.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            punctRegex = new RegExp(`([${escapedPunct}])`, 'g');
 
-                session = await ort.InferenceSession.create('okhra_v2.onnx', { executionProviders: ['wasm'] });
-
-                document.getElementById('checkBtn').innerText = "Check Text";
-                document.getElementById('checkBtn').disabled = false;
-            } catch (e) {
-                console.error(e);
-                document.getElementById('checkBtn').innerText = "Error loading model!";
-                document.getElementById('verdictBox').innerText = "Check browser console for errors.";
-            }
-        }
-
-        function sigmoid(z) {
-            return 1 / (1 + Math.exp(-z));
-        }
-
-        async function analyzeText() {
-            if (!session || !config) return;
-            const text = document.getElementById('inputText').value;
-            if (text.trim().length === 0) return;
-
-            document.getElementById('checkBtn').innerText = "Analyzing...";
-            document.getElementById('checkBtn').disabled = true;
-
-            try {
-                let tokens = [];
-                let wordRegex = /\S+/g;
-                let match;
-
-                while ((match = wordRegex.exec(text)) !== null) {
-                    let word = match[0];
-                    let startIdx = match.index;
-                    let endIdx = wordRegex.lastIndex;
-
-                    let paddedWord = word.toLowerCase().replace(punctRegex, ' $1 ');
-                    let subTokens = paddedWord.trim().split(/\s+/);
-
-                    for (let t of subTokens) {
-                        if (t === "") continue;
-                        let isPunct = punctStr.includes(t) && t.length === 1;
-                        let mappedT = (isPunct || selectWordsSet.has(t)) ? t : '_';
-                        let id = config.vocab_map[mappedT] || config.unk_idx;
-                        tokens.push({ id: id, start: startIdx, end: endIdx });
-                    }
-                }
-
-                if (tokens.length === 0) {
-                    resetUI();
-                    return;
-                }
-
-                let maxLen = config.max_len;
-                let numChunks = Math.ceil(tokens.length / maxLen);
-                let flatArray = new BigInt64Array(numChunks * maxLen);
-                flatArray.fill(BigInt(config.pad_idx));
-
-                for (let c = 0; c < numChunks; c++) {
-                    let chunkStart = c * maxLen;
-                    let chunkEnd = Math.min(tokens.length, (c + 1) * maxLen);
-                    for (let i = 0; i < (chunkEnd - chunkStart); i++) {
-                        flatArray[c * maxLen + i] = BigInt(tokens[chunkStart + i].id);
-                    }
-                }
-
-                const inputTensor = new ort.Tensor('int64', flatArray, [numChunks, maxLen]);
-                const results = await session.run({ input: inputTensor });
-                const logits = results.output.data;
-                
-                let probs = [];
-                let totalProb = 0;
-                for (let i = 0; i < numChunks; i++) {
-                    let p = sigmoid(logits[i]);
-                    probs.push(p);
-                    totalProb += p;
-                }
-                let avgProb = totalProb / numChunks;
-
-                let threshold = config.threshold;
-                
-                let verdictEl = document.getElementById('verdictBox');
-                if (avgProb > threshold) {
-                    verdictEl.innerText = `AI Generated`;
-                    verdictEl.style.color = "#a83232";
-                } else {
-                    verdictEl.innerText = `Human Written`;
-                    verdictEl.style.color = "#4c8b3f";
-                }
-
-                let renderedHtml = "";
-                let lastIdx = 0;
-
-                for (let c = 0; c < numChunks; c++) {
-                    let startTokenIdx = c * maxLen;
-                    let nextStartTokenIdx = (c + 1) * maxLen;
-
-                    let chunkStartChar = tokens[startTokenIdx].start;
-                    let chunkEndChar = (nextStartTokenIdx < tokens.length) ? tokens[nextStartTokenIdx].start : text.length;
-
-                    if (chunkStartChar > lastIdx) {
-                        renderedHtml += text.substring(lastIdx, chunkStartChar);
-                    }
-
-                    let chunkText = text.substring(chunkStartChar, chunkEndChar);
-                    let prob = probs[c];
-
-                    if (prob > threshold) {
-                        let intensity = Math.min(1.0, (prob - threshold) / (1.0 - threshold));
-                        let alpha = intensity * 0.6 + 0.15;
-                        renderedHtml += `<span class="chunk" style="background-color: rgba(220, 50, 50, ${alpha});">${chunkText}</span>`;
-                    } else {
-                        renderedHtml += `<span>${chunkText}</span>`;
-                    }
-                    lastIdx = chunkEndChar;
-                }
-                
-                if (lastIdx < text.length) {
-                    renderedHtml += text.substring(lastIdx);
-                }
-
-                document.getElementById('coloredText').innerHTML = renderedHtml;
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('verdictBox').innerText = "An error occurred during analysis.";
-            }
+            session = await ort.InferenceSession.create('okhra_v2.onnx', { executionProviders: ['wasm'] });
 
             document.getElementById('checkBtn').innerText = "Check Text";
             document.getElementById('checkBtn').disabled = false;
+        } catch (e) {
+            console.error(e);
+            document.getElementById('checkBtn').innerText = "Error loading model!";
+            document.getElementById('verdictBox').innerText = "Check browser console for errors.";
+        }
+    }
+
+    function sigmoid(z) {
+        return 1 / (1 + Math.exp(-z));
+    }
+
+    async function analyzeText() {
+        if (!session || !config) return;
+        const text = document.getElementById('inputText').value;
+        if (text.trim().length === 0) return;
+
+        document.getElementById('checkBtn').innerText = "Analyzing...";
+        document.getElementById('checkBtn').disabled = true;
+
+        try {
+            let tokens = [];
+            let wordRegex = /\S+/g;
+            let match;
+
+            while ((match = wordRegex.exec(text)) !== null) {
+                let word = match[0];
+                let startIdx = match.index;
+                let endIdx = wordRegex.lastIndex;
+
+                let paddedWord = word.toLowerCase().replace(punctRegex, ' $1 ');
+                let subTokens = paddedWord.trim().split(/\s+/);
+
+                for (let t of subTokens) {
+                    if (t === "") continue;
+                    let isPunct = punctStr.includes(t) && t.length === 1;
+                    let mappedT = (isPunct || selectWordsSet.has(t)) ? t : '_';
+                    let id = config.vocab_map[mappedT] || config.unk_idx;
+                    tokens.push({ id: id, start: startIdx, end: endIdx });
+                }
+            }
+
+            if (tokens.length === 0) {
+                resetUI();
+                return;
+            }
+
+            let maxLen = config.max_len;
+            let numChunks = Math.ceil(tokens.length / maxLen);
+            let flatArray = new BigInt64Array(numChunks * maxLen);
+            flatArray.fill(BigInt(config.pad_idx));
+
+            for (let c = 0; c < numChunks; c++) {
+                let chunkStart = c * maxLen;
+                let chunkEnd = Math.min(tokens.length, (c + 1) * maxLen);
+                for (let i = 0; i < (chunkEnd - chunkStart); i++) {
+                    flatArray[c * maxLen + i] = BigInt(tokens[chunkStart + i].id);
+                }
+            }
+
+            const inputTensor = new ort.Tensor('int64', flatArray, [numChunks, maxLen]);
+            const results = await session.run({ input: inputTensor });
+            const logits = results.output.data;
+            
+            let probs = [];
+            let totalProb = 0;
+            for (let i = 0; i < numChunks; i++) {
+                let p = sigmoid(logits[i]);
+                probs.push(p);
+                totalProb += p;
+            }
+            let avgProb = totalProb / numChunks;
+
+            let threshold = config.threshold;
+            
+            let verdictEl = document.getElementById('verdictBox');
+            if (avgProb > threshold) {
+                verdictEl.innerText = `AI Generated`;
+                verdictEl.style.color = "#a83232";
+            } else {
+                verdictEl.innerText = `Human Written`;
+                verdictEl.style.color = "#4c8b3f";
+            }
+
+            let renderedHtml = "";
+            let lastIdx = 0;
+
+            for (let c = 0; c < numChunks; c++) {
+                let startTokenIdx = c * maxLen;
+                let nextStartTokenIdx = (c + 1) * maxLen;
+
+                let chunkStartChar = tokens[startTokenIdx].start;
+                let chunkEndChar = (nextStartTokenIdx < tokens.length) ? tokens[nextStartTokenIdx].start : text.length;
+
+                if (chunkStartChar > lastIdx) {
+                    renderedHtml += text.substring(lastIdx, chunkStartChar);
+                }
+
+                let chunkText = text.substring(chunkStartChar, chunkEndChar);
+                let prob = probs[c];
+
+                if (prob > threshold) {
+                    let intensity = Math.min(1.0, (prob - threshold) / (1.0 - threshold));
+                    let alpha = intensity * 0.6 + 0.15;
+                    renderedHtml += `<span class="chunk" style="background-color: rgba(220, 50, 50, ${alpha});">${chunkText}</span>`;
+                } else {
+                    renderedHtml += `<span>${chunkText}</span>`;
+                }
+                lastIdx = chunkEndChar;
+            }
+            
+            if (lastIdx < text.length) {
+                renderedHtml += text.substring(lastIdx);
+            }
+
+            document.getElementById('coloredText').innerHTML = renderedHtml;
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById('verdictBox').innerText = "An error occurred during analysis.";
         }
 
-        function resetUI() {
-            document.getElementById('checkBtn').innerText = "Check";
-            document.getElementById('checkBtn').disabled = false;
-            document.getElementById('verdictBox').innerText = "Waiting for input...";
-            document.getElementById('verdictBox').style.color = "inherit";
-            document.getElementById('coloredText').innerHTML = "Output will appear here. AI-generated segments will be highlighted in red.";
-        }
+        document.getElementById('checkBtn').innerText = "Check Text";
+        document.getElementById('checkBtn').disabled = false;
+    }
 
-        document.getElementById('checkBtn').addEventListener('click', analyzeText);
+    function resetUI() {
+        document.getElementById('checkBtn').innerText = "Check";
+        document.getElementById('checkBtn').disabled = false;
+        document.getElementById('verdictBox').innerText = "Waiting for input...";
+        document.getElementById('verdictBox').style.color = "inherit";
+        document.getElementById('coloredText').innerHTML = "Output will appear here. AI-generated segments will be highlighted in red.";
+    }
 
-        window.onload = init;
-    </script>
+    document.getElementById('checkBtn').addEventListener('click', analyzeText);
+
+    window.onload = init;
+</script>
 </body>
 </html>
