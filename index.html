@@ -30,6 +30,30 @@
         align-items: flex-start;
         max-width: 1200px;
     }
+
+    /* Top Bar Styling */
+    .top-nav {
+        width: 100%;
+        display: flex;
+        gap: 25px;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .top-nav a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-size: 0.95em;
+        transition: color 0.2s;
+    }
+    .top-nav a:hover {
+        color: var(--accent-color);
+    }
+    .top-nav a.active {
+        font-weight: 900;
+        color: var(--accent-color);
+    }
+
     h1 {
         color: var(--accent-color);
         margin-bottom: 5px;
@@ -132,6 +156,13 @@
 </style>
 </head>
 <body>
+
+<nav class="top-nav">
+    <a href="https://okhra.neocities.org">About</a>
+    <a href="https://okhra-dev.github.io/okhra-web" class="active">AI detector</a>
+    <a href="https://okhra.neocities.org/research">Research</a>
+    <a href="https://okhra.neocities.org/contact">Contact</a>
+</nav>
 
 <h1>Okhra V2</h1>
 <p class="subtitle">Fast and accurate AI detector. Text is processed locally in your browser.</p>
@@ -310,7 +341,7 @@
         document.getElementById('checkBtn').disabled = false;
         document.getElementById('verdictBox').innerText = "Waiting for input...";
         document.getElementById('verdictBox').style.color = "inherit";
-        document.getElementById('coloredText').innerHTML = "Output will appear here. AI-generated segments will be highlighted in red.";
+        document.getElementById('coloredText').innerHTML = "Output will appear here with possibly AI-generated text highlighted in red";
     }
 
     document.getElementById('checkBtn').addEventListener('click', analyzeText);
