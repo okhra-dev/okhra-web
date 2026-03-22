@@ -53,6 +53,7 @@
     .panel {
         flex: 1;
         min-width: 300px;
+        height: 600px;
         background-color: var(--panel-bg);
         border: 1px solid var(--border-color);
         border-radius: 8px;
@@ -65,7 +66,6 @@
     textarea {
         width: 100%;
         flex-grow: 1;
-        min-height: 400px;
         background-color: var(--bg-color);
         border: 1px solid var(--border-color);
         color: var(--text-color);
@@ -73,8 +73,9 @@
         font-size: 14px;
         padding: 15px;
         border-radius: 4px;
-        resize: vertical;
+        resize: none;
         box-sizing: border-box;
+        overflow-y: auto;
     }
     textarea:focus {
         outline: none;
@@ -92,6 +93,7 @@
         border-radius: 4px;
         margin-top: 15px;
         transition: background 0.2s;
+        flex-shrink: 0;
     }
     button:hover {
         background-color: var(--btn-hover);
@@ -109,6 +111,7 @@
         background-color: var(--bg-color);
         border: 1px solid var(--border-color);
         margin-bottom: 15px;
+        flex-shrink: 0;
     }
     #coloredText {
         flex-grow: 1;
@@ -120,8 +123,8 @@
         font-weight: 400;
         white-space: pre-wrap;
         overflow-y: auto;
-        min-height: 330px;
         line-height: 1.6;
+        height: 0;
     }
     .chunk {
         border-radius: 3px;
@@ -151,6 +154,19 @@
     let punctRegex = null;
 
     const punctStr = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~–—…«»‹›„‚‐‑‒―‟‛";
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>"']/g, function(m) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[m];
+        });
+    }
+
     async function init() {
         try {
             const configRes = await fetch('model_config.json');
@@ -258,7 +274,7 @@
                 let chunkEndChar = (nextStartTokenIdx < tokens.length) ? tokens[nextStartTokenIdx].start : text.length;
 
                 if (chunkStartChar > lastIdx) {
-                    renderedHtml += text.substring(lastIdx, chunkStartChar);
+                    renderedHtml += escapeHTML(text.substring(lastIdx, chunkStartChar));
                 }
 
                 let chunkText = text.substring(chunkStartChar, chunkEndChar);
@@ -267,15 +283,15 @@
                 if (prob > threshold) {
                     let intensity = Math.min(1.0, (prob - threshold) / (1.0 - threshold));
                     let alpha = intensity * 0.6 + 0.15;
-                    renderedHtml += `<span class="chunk" style="background-color: rgba(220, 50, 50, ${alpha});">${chunkText}</span>`;
+                    renderedHtml += `<span class="chunk" style="background-color: rgba(220, 50, 50, ${alpha});">${escapeHTML(chunkText)}</span>`;
                 } else {
-                    renderedHtml += `<span>${chunkText}</span>`;
+                    renderedHtml += `<span>${escapeHTML(chunkText)}</span>`;
                 }
                 lastIdx = chunkEndChar;
             }
             
             if (lastIdx < text.length) {
-                renderedHtml += text.substring(lastIdx);
+                renderedHtml += escapeHTML(text.substring(lastIdx));
             }
 
             document.getElementById('coloredText').innerHTML = renderedHtml;
