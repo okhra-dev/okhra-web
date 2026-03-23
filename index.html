@@ -230,6 +230,17 @@
         const text = document.getElementById('inputText').value;
         if (text.trim().length === 0) return;
 
+        // --- NEW: Word count check ---
+        const wordCount = (text.match(/\S+/g) || []).length;
+        if (wordCount < 50) {
+            let verdictEl = document.getElementById('verdictBox');
+            verdictEl.innerText = "Text too short";
+            verdictEl.style.color = "var(--text-color)"; // Resets to default color
+            document.getElementById('coloredText').innerText = "Please input at least 50 words";
+            return;
+        }
+        // ------------------------------
+
         document.getElementById('checkBtn').innerText = "Analyzing...";
         document.getElementById('checkBtn').disabled = true;
 
