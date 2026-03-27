@@ -4,157 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Okhra V2</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 <style>
     :root {
-        --bg-color: #fdfaf6;
-        --panel-bg: #f5ebe1;
-        --border-color: #d8c3b1;
-        --text-color: #4a3b32;
-        --accent-color: #a0785a;
-        --btn-hover: #8b6548;
-        --ai-color: #a83232;
-        --human-color: #4c8b3f;
-        --mixed-color: #d97706;
+        --bg: #ffffff;
+        --fg: #000000;
+        --gray-100: #f5f5f5;
+        --gray-200: #e5e5e5;
+        --gray-400: #a3a3a3;
+        --gray-600: #525252;
+        --gray-900: #171717;
+        --accent: #000000;
     }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
     body {
-        font-family: "Lato", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        margin: 0 auto;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        background-color: var(--bg);
+        color: var(--fg);
+        line-height: 1.5;
+        padding: 2rem;
         max-width: 1200px;
+        margin: 0 auto;
     }
 
-    /* Top Bar Styling */
+    /* Navigation */
     .top-nav {
-        width: 100%;
         display: flex;
-        gap: 25px;
-        padding-bottom: 15px;
-        margin-bottom: 25px;
-        border-bottom: 1px solid var(--border-color);
+        gap: 2rem;
+        margin-bottom: 3rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--fg);
     }
+    
     .top-nav a {
         text-decoration: none;
-        color: var(--text-color);
-        font-size: 0.95em;
-        transition: color 0.2s;
+        color: var(--gray-600);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: color 0.15s;
     }
+    
     .top-nav a:hover {
-        color: var(--accent-color);
+        color: var(--fg);
     }
+    
     .top-nav a.active {
-        font-weight: 900;
-        color: var(--accent-color);
+        color: var(--fg);
+        font-weight: 600;
     }
 
     h1 {
-        color: var(--accent-color);
-        margin-bottom: 5px;
-        font-size: 2.5em;
-        font-weight: 900;
-    }
-    p.subtitle {
-        margin-top: 0;
-        font-size: 1.1em;
+        font-size: 2rem;
         font-weight: 700;
-        color: #7a6859;
-        margin-bottom: 25px;
-        text-align: left;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
     }
+    
+    p.subtitle {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+        margin-bottom: 3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
     .container {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
         width: 100%;
-        gap: 20px;
     }
+    
+    @media (max-width: 768px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+    }
+
     .panel {
-        flex: 1;
-        min-width: 300px;
-        height: 600px;
-        background-color: var(--panel-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 20px;
+        background-color: var(--gray-100);
+        border: 1px solid var(--fg);
+        padding: 1.5rem;
         display: flex;
         flex-direction: column;
-        box-sizing: border-box;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        height: 600px;
     }
+
     textarea {
         width: 100%;
         flex-grow: 1;
-        background-color: var(--bg-color);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
+        background-color: var(--bg);
+        border: 1px solid var(--gray-400);
+        color: var(--fg);
         font-family: inherit;
-        font-size: 14px;
-        padding: 15px;
-        border-radius: 4px;
+        font-size: 0.875rem;
+        padding: 1rem;
         resize: none;
-        box-sizing: border-box;
-        overflow-y: auto;
-    }
-    textarea:focus {
         outline: none;
-        border-color: var(--accent-color);
+        line-height: 1.6;
     }
+    
+    textarea:focus {
+        border-color: var(--fg);
+    }
+
     button {
-        background-color: var(--accent-color);
-        color: #fff;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
+        background-color: var(--fg);
+        color: var(--bg);
+        border: 1px solid var(--fg);
+        padding: 0.75rem 1.5rem;
         font-family: inherit;
-        font-weight: 700;
+        font-size: 0.875rem;
+        font-weight: 600;
         cursor: pointer;
-        border-radius: 4px;
-        margin-top: 15px;
-        transition: background 0.2s;
-        flex-shrink: 0;
+        margin-top: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.15s;
     }
-    button:hover {
-        background-color: var(--btn-hover);
+    
+    button:hover:not(:disabled) {
+        background-color: var(--bg);
+        color: var(--fg);
     }
+    
     button:disabled {
-        background-color: var(--border-color);
+        opacity: 0.5;
         cursor: not-allowed;
+        background-color: var(--gray-200);
+        color: var(--gray-600);
+        border-color: var(--gray-400);
     }
+
     #verdictBox {
-        text-align: center;
-        padding: 15px;
-        font-size: 1.4em;
-        font-weight: 900;
-        border-radius: 4px;
-        background-color: var(--bg-color);
-        border: 1px solid var(--border-color);
-        margin-bottom: 15px;
+        text-align: left;
+        padding: 1rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background-color: var(--bg);
+        border: 1px solid var(--fg);
+        margin-bottom: 1rem;
         flex-shrink: 0;
+        min-height: 3rem;
+        display: flex;
+        align-items: center;
     }
+
     #coloredText {
         flex-grow: 1;
-        background-color: var(--bg-color);
-        border: 1px solid var(--border-color);
-        padding: 15px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 400;
+        background-color: var(--bg);
+        border: 1px solid var(--gray-400);
+        padding: 1rem;
+        font-size: 0.875rem;
         white-space: pre-wrap;
         overflow-y: auto;
         line-height: 1.6;
-        height: 0;
+        color: var(--gray-900);
     }
-    .chunk {
-        border-radius: 3px;
+
+    .chunk-ai {
+        background-color: var(--fg);
+        color: var(--bg);
+        padding: 0.1em 0;
+    }
+    
+    .chunk-mixed {
+        background-color: var(--gray-400);
+        color: var(--fg);
+        padding: 0.1em 0;
     }
 </style>
 </head>
@@ -168,7 +194,7 @@
 </nav>
 
 <h1>Okhra V2</h1>
-<p class="subtitle">Fast and accurate AI detector. Text is processed locally in your browser. English language only.</p>
+<p class="subtitle">Fast and accurate AI detector. All text is processed locally in your browser. English language only.</p>
 
 <div class="container">
     <div class="panel">
@@ -177,7 +203,7 @@
     </div>
     <div class="panel right-panel">
         <div id="verdictBox">Waiting for input...</div>
-        <div id="coloredText">Output will appear here. AI-generated segments will be highlighted in red.</div>
+        <div id="coloredText">Output will appear here. AI-generated segments will be highlighted.</div>
     </div>
 </div>
 
@@ -216,7 +242,7 @@
             document.getElementById('checkBtn').disabled = false;
         } catch (e) {
             console.error(e);
-            document.getElementById('checkBtn').innerText = "Error loading model!";
+            document.getElementById('checkBtn').innerText = "Error loading model";
             document.getElementById('verdictBox').innerText = "Check browser console for errors.";
         }
     }
@@ -230,16 +256,14 @@
         const text = document.getElementById('inputText').value;
         if (text.trim().length === 0) return;
 
-        // --- NEW: Word count check ---
         const wordCount = (text.match(/\S+/g) || []).length;
         if (wordCount < 50) {
             let verdictEl = document.getElementById('verdictBox');
-            verdictEl.innerText = "Text too short";
-            verdictEl.style.color = "var(--text-color)"; // Resets to default color
-            document.getElementById('coloredText').innerText = "Please input at least 50 words";
+            verdictEl.innerText = "Text too short — minimum 50 words required";
+            verdictEl.style.color = "var(--gray-600)";
+            document.getElementById('coloredText').innerText = "";
             return;
         }
-        // ------------------------------
 
         document.getElementById('checkBtn').innerText = "Analyzing...";
         document.getElementById('checkBtn').disabled = true;
@@ -299,20 +323,19 @@
                 if (p > 0.7) hasHighProbChunk = true; 
             }
             let avgProb = totalProb / numChunks;
-
             let threshold = config.threshold;
             
             let verdictEl = document.getElementById('verdictBox');
             
             if (avgProb > threshold) {
-                verdictEl.innerText = `AI Generated`;
-                verdictEl.style.color = "var(--ai-color)";
+                verdictEl.innerText = `AI Generated (${(avgProb * 100).toFixed(1)}% confidence)`;
+                verdictEl.style.color = "var(--fg)";
             } else if (hasHighProbChunk) {
-                verdictEl.innerText = `Mixed`;
-                verdictEl.style.color = "var(--mixed-color)";
+                verdictEl.innerText = `Mixed Content`;
+                verdictEl.style.color = "var(--gray-600)";
             } else {
-                verdictEl.innerText = `Human Written`;
-                verdictEl.style.color = "var(--human-color)";
+                verdictEl.innerText = `Human Written (${(100 - avgProb * 100).toFixed(1)}% confidence)`;
+                verdictEl.style.color = "var(--gray-600)";
             }
 
             let renderedHtml = "";
@@ -333,9 +356,9 @@
                 let prob = probs[c];
 
                 if (prob > threshold) {
-                    let intensity = Math.min(1.0, (prob - threshold) / (1.0 - threshold));
-                    let alpha = intensity * 0.6 + 0.15;
-                    renderedHtml += `<span class="chunk" style="background-color: rgba(220, 50, 50, ${alpha});">${escapeHTML(chunkText)}</span>`;
+                    renderedHtml += `<span class="chunk-ai">${escapeHTML(chunkText)}</span>`;
+                } else if (prob > 0.5) {
+                    renderedHtml += `<span class="chunk-mixed">${escapeHTML(chunkText)}</span>`;
                 } else {
                     renderedHtml += `<span>${escapeHTML(chunkText)}</span>`;
                 }
@@ -350,7 +373,7 @@
 
         } catch (err) {
             console.error(err);
-            document.getElementById('verdictBox').innerText = "An error occurred during analysis.";
+            document.getElementById('verdictBox').innerText = "Analysis error occurred";
         }
 
         document.getElementById('checkBtn').innerText = "Check Text";
@@ -358,11 +381,11 @@
     }
 
     function resetUI() {
-        document.getElementById('checkBtn').innerText = "Check";
+        document.getElementById('checkBtn').innerText = "Check Text";
         document.getElementById('checkBtn').disabled = false;
         document.getElementById('verdictBox').innerText = "Waiting for input...";
         document.getElementById('verdictBox').style.color = "inherit";
-        document.getElementById('coloredText').innerHTML = "Output will appear here with possibly AI-generated text highlighted in red";
+        document.getElementById('coloredText').innerHTML = "Output will appear here with AI-generated text highlighted";
     }
 
     document.getElementById('checkBtn').addEventListener('click', analyzeText);
